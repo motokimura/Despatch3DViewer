@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>DESPATCH - 3D Viewer</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+
+			}
+
+			a { color: skyblue }
+			.button { background:#999; color:#eee; padding:0.2em 0.5em; cursor:pointer }
+			.highlight { background:orange; color:#fff; }
+
+			span {
+				display: inline-block;
+				width: 60px;
+				float: left;
+				text-align: center;
+			}
+
+		</style>
+	</head>
+	
+	<body>
+		<div id="info">
+			<a href="http://artsat.jp/despatch" target="_blank">ARTSAT2:DESPATCH</a> -
+			3D Viewer by <a href="https://github.com/ARTSAT" target="_blank">ARTSAT Project</a>
+		</div>
+
+		<script src="threejs/three.min.js"></script>
+		<script src="threejs/STLLoader.js"></script>
+		<script src="threejs/Detector.js"></script>
+		<script src="threejs/stats.min.js"></script>
+		<script src="threejs/OrbitControls.js"></script>
+
+		<script>
+		
+			if (!Detector.webgl) Detector.addGetWebGLMessage ();
+			
+			var container, stats;
+			
+			var camera, scene, renderer;
+			var controls;	// camera control
+			
+			var mesh;		// mesh for the satellite
+			
+			var timer;
+			
+			init();
+			//animate();
+			
+			function init () {
+				
+				container = document.createElement ('div');
+				document.body.appendChild (container);
+				
+				// camera
+				camera = new THREE.PerspectiveCamera (35, window.innerWidth / window.innerHeight, 1, 10000 );
+				
+				camera.up.x = 0;
+				camera.up.y = 1;
+				camera.up.z = 0;
+				
+				camera.position.x = 3.0;
+				camera.position.y = 0.0;
+				camera.position.z = 0.0;
+				
+				camera.lookAt (new THREE.Vector3 (0, 0, 0));
+				
+				// scene
+				scene = new THREE.Scene ();
+
+				// mesh
+				var loader = new THREE.STLLoader ();
+				loader.addEventListener ('load', function (event) {
+					
+					var geometry = event.content;
+					geometry.applyMatrix (new THREE.Matrix4 ().makeTranslation (-250, 0, 0));
+					
+					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0xffffff, specular: 0x222222, shininess: 200 });
+					
+					mesh = new THREE.Mesh (geometry, material);
+					
+					mesh.position.set (0, 0, 0);
+					mesh.scale.set (0.002, 0.002, 0.002);
+					
+					mesh.castShadow = true;
+					mesh.receiveShadow = true;
+					
+					scene.add (mesh);
+				});
+				loader.load ('models/despatch_all.stl');
+				
+				// lights
+				scene.add (new THREE.AmbientLight (0x999999));
+				
+				addShadowedLight (3, 0, 0, 0xddeeff, 1);
+				addShadowedLight (-10, 0, 0, 0xddeeff, 1);
+				
+				// renderer
+				renderer = new THREE.WebGLRenderer ({antialias: true});
+				renderer.setSize (window.innerWidth, window.innerHeight);
+				
+				renderer.gammaInput = true;
+				renderer.gammaOutput = true;
+
+				renderer.shadowMapEnabled = true;
+				renderer.shadowMapCullFace = THREE.CullFaceBack;
+
+				container.appendChild (renderer.domElement);
+				
+				// camera control
+				controls = new THREE.OrbitControls (camera, renderer.domElement);
+				
+				
+				controls.zoomSpeed = 0.5;
+				controls.panSpeed = 0.5;
+				
+				controls.minDistance = 2.0;
+				controls.maxDistance = 10.0;
+				
+				//controls.addEventListener('change', render);
+
+				// stats
+				stats = new Stats ();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				container.appendChild (stats.domElement);
+				
+				// event listener
+				window.addEventListener ('resize', onWindowResize, false);
+				window.addEventListener ('dblclick', onDoubleClick, false);
+				
+				timer = Date.now ();
+				
+				var fps = 20;
+				setInterval (animate, 1000 / fps);
+			}
+
+			function addShadowedLight (x, y, z, color, intensity) {
+
+				var directionalLight = new THREE.DirectionalLight (color, intensity);
+				directionalLight.position.set (x, y, z);
+				scene.add (directionalLight);
+
+				directionalLight.castShadow = true;
+
+				var d = 1;
+				directionalLight.shadowCameraLeft = -d;
+				directionalLight.shadowCameraRight = d;
+				directionalLight.shadowCameraTop = d;
+				directionalLight.shadowCameraBottom = -d;
+
+				directionalLight.shadowCameraNear = 1;
+				directionalLight.shadowCameraFar = 4;
+
+				directionalLight.shadowMapWidth = 1024;
+				directionalLight.shadowMapHeight = 1024;
+
+				directionalLight.shadowBias = -0.005;
+				directionalLight.shadowDarkness = 0.15;
+			}
+			
+			function onWindowResize () {
+				
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix ();
+				
+				renderer.setSize (window.innerWidth, window.innerHeight);
+			}
+			
+			function onDoubleClick () {
+				
+				delete mesh.material;
+				
+				amb = Math.random () * 0xffffff;
+				col = Math.random () * 0xffffff;
+				
+				mesh.material = new THREE.MeshPhongMaterial ({ambient: amb, color: col, specular: 0x222222, shininess: 200 });
+			}
+
+			function animate () {
+				
+				//requestAnimationFrame (animate);
+				
+				rotateMeshes ();
+				render ();
+				
+				stats.update ();
+				controls.update ();
+			}
+			
+			function render () {
+				
+				renderer.render (scene, camera);
+			}
+			
+			function rotateMeshes ()
+			{
+				var dt = timer - Date.now ();
+				timer = Date.now ();
+				
+				var speed = 0.0001;
+				
+				if (mesh) {
+					mesh.rotation.y += speed * dt;
+				}
+			}
+
+		</script>
+	</body>
+</html>

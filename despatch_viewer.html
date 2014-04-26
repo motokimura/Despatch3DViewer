@@ -22,6 +22,13 @@
 				display:block;
 
 			}
+			
+			#loading {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-left:-30px;
+			}
 
 			a { color: skyblue }
 			.button { background:#999; color:#eee; padding:0.2em 0.5em; cursor:pointer }
@@ -42,16 +49,26 @@
 			<a href="http://artsat.jp/despatch" target="_blank">ARTSAT2:DESPATCH</a> -
 			3D Viewer by <a href="https://github.com/ARTSAT" target="_blank">ARTSAT Project</a>
 		</div>
+		
+		<div id="loading">
+			<img src="images/loading.gif">
+		</div>
 
-		<script src="threejs/three.min.js"></script>
-		<script src="threejs/STLLoader.js"></script>
-		<script src="threejs/Detector.js"></script>
-		<script src="threejs/stats.min.js"></script>
-		<script src="threejs/OrbitControls.js"></script>
+		<script src="js/three.min.js"></script>
+		<script src="js/STLLoader.js"></script>
+		<script src="js/Detector.js"></script>
+		<script src="js/stats.min.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/jquery-2.1.0.min.js"></script>
 
 		<script>
 		
-			if (!Detector.webgl) Detector.addGetWebGLMessage ();
+			if (!Detector.webgl) {
+				
+				Detector.addGetWebGLMessage ();
+				
+				$("#loading").fadeOut();
+			}
 			
 			var container, stats;
 			
@@ -105,7 +122,7 @@
 					
 					scene.add (mesh);
 				});
-				loader.load ('models/despatch_all.stl');
+				loader.load ('models/despatch_all_r.stl');
 				
 				// lights
 				scene.add (new THREE.AmbientLight (0x999999));
@@ -140,7 +157,8 @@
 				// stats
 				stats = new Stats ();
 				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
+				stats.domElement.style.bottom = '0px';
+				stats.domElement.style.right = '0px';
 				container.appendChild (stats.domElement);
 				
 				// event listener
@@ -149,7 +167,7 @@
 				
 				timer = Date.now ();
 				
-				var fps = 20;
+				var fps = 30;
 				setInterval (animate, 1000 / fps);
 			}
 
@@ -194,10 +212,20 @@
 				
 				mesh.material = new THREE.MeshPhongMaterial ({ambient: amb, color: col, specular: 0x222222, shininess: 200 });
 			}
-
+			
+			var finishLoading = false;
 			function animate () {
 				
 				//requestAnimationFrame (animate);
+				
+				if (!finishLoading) {
+					
+					if (stlIsLoaded ()) {
+						
+						$("#loading").fadeOut();
+						finishLoading = true;
+					}
+				}
 				
 				rotateMeshes ();
 				render ();
@@ -218,9 +246,18 @@
 				
 				var speed = 0.0001;
 				
-				if (mesh) {
+				if (stlIsLoaded ()) {
 					mesh.rotation.y += speed * dt;
 				}
+			}
+			
+			function stlIsLoaded () {
+				
+				if (!mesh) {
+					return false;
+				}
+				
+				return true;
 			}
 
 		</script>

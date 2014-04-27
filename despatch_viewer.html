@@ -47,7 +47,7 @@
 	<body>
 		<div id="info">
 			<a href="http://artsat.jp/despatch" target="_blank">ARTSAT2:DESPATCH</a> -
-			3D Viewer by <a href="https://github.com/ARTSAT" target="_blank">ARTSAT Project</a>
+			3D Viewer by <a href="https://github.com/ARTSAT/Despatch3DViewer" target="_blank">ARTSAT Project</a>
 		</div>
 		
 		<div id="loading">
@@ -75,7 +75,7 @@
 			var camera, scene, renderer;
 			var controls;	// camera control
 			
-			var mesh;		// mesh for the satellite
+			var uzumaki_mesh, cover_mesh, base_mesh, pafif_mesh, stay_mesh;
 			
 			var timer;
 			
@@ -103,26 +103,114 @@
 				// scene
 				scene = new THREE.Scene ();
 
-				// mesh
-				var loader = new THREE.STLLoader ();
-				loader.addEventListener ('load', function (event) {
+				// meshes
+				const Scale = 0.002;
+				const TransVec = new THREE.Matrix4 ().makeTranslation (-250, -300, -250);
+				
+				// mesh for uzumaki
+				var uzumakiLoader = new THREE.STLLoader ();
+				uzumakiLoader.addEventListener ('load', function (event) {
 					
 					var geometry = event.content;
-					geometry.applyMatrix (new THREE.Matrix4 ().makeTranslation (-250, 0, 0));
+					geometry.applyMatrix (TransVec);
 					
-					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0xffffff, specular: 0x222222, shininess: 200 });
+					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0xffffff, specular: 0x222222, shininess: 100});
 					
-					mesh = new THREE.Mesh (geometry, material);
+					uzumaki_mesh = new THREE.Mesh (geometry, material);
 					
-					mesh.position.set (0, 0, 0);
-					mesh.scale.set (0.002, 0.002, 0.002);
+					uzumaki_mesh.position.set (0, 0, 0);
+					uzumaki_mesh.scale.set (Scale, Scale, Scale);
 					
-					mesh.castShadow = true;
-					mesh.receiveShadow = true;
+					uzumaki_mesh.castShadow = true;
+					uzumaki_mesh.receiveShadow = true;
 					
-					scene.add (mesh);
+					scene.add (uzumaki_mesh);
 				});
-				loader.load ('models/despatch_all_r.stl');
+				uzumakiLoader.load ('models/despatch_uzumaki.stl');
+				
+				// mesh for cover
+				var coverLoader = new THREE.STLLoader ();
+				coverLoader.addEventListener ('load', function (event) {
+					
+					var geometry = event.content;
+					geometry.applyMatrix (TransVec);
+					
+					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0x222222, specular: 0xffffff, shininess: 200});
+					
+					cover_mesh = new THREE.Mesh (geometry, material);
+					
+					cover_mesh.position.set (0, 0, 0);
+					cover_mesh.scale.set (Scale, Scale, Scale);
+					
+					cover_mesh.castShadow = true;
+					cover_mesh.receiveShadow = true;
+					
+					scene.add (cover_mesh);
+				});
+				coverLoader.load ('models/despatch_cover.stl');
+				
+				// mesh for base
+				var baseLoader = new THREE.STLLoader ();
+				baseLoader.addEventListener ('load', function (event) {
+					
+					var geometry = event.content;
+					geometry.applyMatrix (TransVec);
+					
+					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0x222222, specular: 0xffffff, shininess: 200});
+					
+					base_mesh = new THREE.Mesh (geometry, material);
+					
+					base_mesh.position.set (0, 0, 0);
+					base_mesh.scale.set (Scale, Scale, Scale);
+					
+					base_mesh.castShadow = true;
+					base_mesh.receiveShadow = true;
+					
+					scene.add (base_mesh);
+				});
+				baseLoader.load ('models/despatch_base.stl');
+				
+				// mesh for paf-interface
+				var pafifLoader = new THREE.STLLoader ();
+				pafifLoader.addEventListener ('load', function (event) {
+					
+					var geometry = event.content;
+					geometry.applyMatrix (TransVec);
+					
+					var material = new THREE.MeshPhongMaterial ({ambient: 0x555555, color: 0x3A322B, specular: 0x95411C, shininess: 200});
+					
+					pafif_mesh = new THREE.Mesh (geometry, material);
+					
+					pafif_mesh.position.set (0, 0, 0);
+					pafif_mesh.scale.set (Scale, Scale, Scale);
+					
+					pafif_mesh.castShadow = true;
+					pafif_mesh.receiveShadow = true;
+					
+					scene.add (pafif_mesh);
+				});
+				pafifLoader.load ('models/despatch_pafif.stl');
+				
+				// mesh for stay
+				var stayLoader = new THREE.STLLoader ();
+				stayLoader.addEventListener ('load', function (event) {
+					
+					var geometry = event.content;
+					geometry.applyMatrix (TransVec);
+					
+					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0xffffff, specular: 0x222222, shininess: 100});
+					
+					stay_mesh = new THREE.Mesh (geometry, material);
+					
+					stay_mesh.position.set (0, 0, 0);
+					stay_mesh.scale.set (Scale, Scale, Scale);
+					
+					stay_mesh.castShadow = true;
+					stay_mesh.receiveShadow = true;
+					
+					scene.add (stay_mesh);
+				});
+				stayLoader.load ('models/despatch_stay.stl');
 				
 				// lights
 				scene.add (new THREE.AmbientLight (0x999999));
@@ -205,12 +293,12 @@
 			
 			function onDoubleClick () {
 				
-				delete mesh.material;
+				delete uzumaki_mesh.material;
 				
 				amb = Math.random () * 0xffffff;
 				col = Math.random () * 0xffffff;
 				
-				mesh.material = new THREE.MeshPhongMaterial ({ambient: amb, color: col, specular: 0x222222, shininess: 200 });
+				uzumaki_mesh.material = new THREE.MeshPhongMaterial ({ambient: amb, color: col, specular: 0x222222, shininess: 200 });
 			}
 			
 			var finishLoading = false;
@@ -247,13 +335,29 @@
 				var speed = 0.000075;
 				
 				if (stlIsLoaded ()) {
-					mesh.rotation.y += speed * dt;
+					uzumaki_mesh.rotation.y += speed * dt;
+					cover_mesh.rotation.y   += speed * dt;
+					base_mesh.rotation.y    += speed * dt;
+					pafif_mesh.rotation.y   += speed * dt;
+					stay_mesh.rotation.y    += speed * dt;
 				}
 			}
 			
 			function stlIsLoaded () {
 				
-				if (!mesh) {
+				if (!uzumaki_mesh) {
+					return false;
+				}
+				else if (!cover_mesh) {
+					return false;
+				}				
+				else if (!base_mesh) {
+					return false;
+				}
+				else if (!pafif_mesh) {
+					return false;
+				}
+				else if (!stay_mesh) {
 					return false;
 				}
 				

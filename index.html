@@ -105,7 +105,7 @@
 
 				// meshes
 				const Scale = 0.002;
-				const TransVec = new THREE.Matrix4 ().makeTranslation (-250, -300, -250);
+				const TransVec = new THREE.Matrix4 ().makeTranslation (-250, 0, 0);
 				
 				// mesh for uzumaki
 				var uzumakiLoader = new THREE.STLLoader ();
@@ -114,7 +114,7 @@
 					var geometry = event.content;
 					geometry.applyMatrix (TransVec);
 					
-					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0xffffff, specular: 0x222222, shininess: 100});
+					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0xffffff, specular: 0x222222, shininess: 0});
 					
 					uzumaki_mesh = new THREE.Mesh (geometry, material);
 					
@@ -156,7 +156,7 @@
 					var geometry = event.content;
 					geometry.applyMatrix (TransVec);
 					
-					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0x222222, specular: 0xffffff, shininess: 200});
+					var material = new THREE.MeshPhongMaterial ({ambient: 0x555555, color: 0x3A322B, specular: 0x95411C, shininess: 200});
 					
 					base_mesh = new THREE.Mesh (geometry, material);
 					
@@ -245,8 +245,8 @@
 				// stats
 				stats = new Stats ();
 				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.bottom = '0px';
-				stats.domElement.style.right = '0px';
+				stats.domElement.style.top = '0px';
+				stats.domElement.style.leght = '0px';
 				container.appendChild (stats.domElement);
 				
 				// event listener

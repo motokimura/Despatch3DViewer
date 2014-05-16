@@ -114,7 +114,7 @@
 					var geometry = event.content;
 					geometry.applyMatrix (TransVec);
 					
-					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0xffffff, specular: 0x222222, shininess: 0});
+					var material = new THREE.MeshPhongMaterial ({ambient: 0xffffff, color: 0xffffff, specular: 0x222222, shininess: 50});
 					
 					uzumaki_mesh = new THREE.Mesh (geometry, material);
 					

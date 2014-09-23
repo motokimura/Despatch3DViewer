@@ -80,7 +80,7 @@
 			var timer;
 			
 			init();
-			//animate();
+			animate();
 			
 			function init () {
 				
@@ -255,8 +255,8 @@
 				
 				timer = Date.now ();
 				
-				var fps = 30;
-				setInterval (animate, 1000 / fps);
+				//var fps = 30;
+				//setInterval (animate, 1000 / fps);
 			}
 
 			function addShadowedLight (x, y, z, color, intensity) {
@@ -304,7 +304,7 @@
 			var finishLoading = false;
 			function animate () {
 				
-				//requestAnimationFrame (animate);
+				requestAnimationFrame (animate);
 				
 				if (!finishLoading) {
 					

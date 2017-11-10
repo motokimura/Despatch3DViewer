@@ -4,7 +4,7 @@ A 3D viewer for DESPATCH, writted in Javascript.
 
 ## Description
 
-By using this software, you can view [DESPATCH](http://artsat.jp/en/project/despatch), a micro space-probe developed by ARTSAT project, on your browser. 
+By using this software, you can view [DESPATCH](http://artsat.jp/en/project/despatch), a micro space-probe developed by [ARTSAT project](http://artsat.jp), on your browser. 
 You can zoom in/out and rotate the spacecraft.
 
 ## Demo

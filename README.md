@@ -9,7 +9,7 @@ You can zoom in/out and rotate the spacecraft.
 
 ## Demo
 
-http://mokk.net/despatch3d/
+http://motokimura.github.io/despatch-3d-viewer/
 
 ## Screen shot
 

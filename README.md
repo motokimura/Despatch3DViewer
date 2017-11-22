@@ -15,14 +15,16 @@ http://motokimura.github.io/despatch-3d-viewer/
 
 <img src="https://raw.githubusercontent.com/motokimura/Despatch3DViewer/master/screen_capture.png" />
 
-## Requirement
+## Requirements
 
 A browser that supports WebGL (Google Chrome is recommended).
 
 ## Licence
 
-This software is released under the MIT License, see LICENSE.txt.
+[MIT License](LICENSE.txt)
 
-## Author
+## Team
 
 [Motoki Kimura](https://github.com/motokimura)
+
+[ARTSAT Project](https://github.com/ARTSAT)

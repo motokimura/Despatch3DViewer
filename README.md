@@ -11,7 +11,7 @@ You can zoom in/out and rotate the spacecraft.
 
 http://motokimura.github.io/despatch-3d-viewer/
 
-## Screen shot
+## Screenshot
 
 <img src="screen_capture.png" />
 

@@ -13,13 +13,13 @@ http://motokimura.github.io/despatch-3d-viewer/
 
 ## Screen shot
 
-<img src="https://raw.githubusercontent.com/motokimura/Despatch3DViewer/master/screen_capture.png" />
+<img src="screen_capture.png" />
 
 ## Requirements
 
 A browser that supports WebGL (Google Chrome is recommended).
 
-## Licence
+## License
 
 [MIT License](LICENSE.txt)
 

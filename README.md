@@ -1,4 +1,4 @@
-Despatch3DViewer
+Despatch 3D-viewer
 ====
 A 3D viewer for DESPATCH, writted in Javascript.
 
@@ -9,7 +9,7 @@ You can zoom in/out and rotate the spacecraft.
 
 ## Demo
 
-http://motokimura.github.io/despatch-3d-viewer/
+http://motokimura.github.io/despatch-3d/
 
 ## Screenshot
 

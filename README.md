@@ -1,4 +1,4 @@
-Despatch 3D-viewer
+DESPATCH 3D-viewer
 ====
 A 3D viewer for DESPATCH micro space-probe with Three.js.
 
